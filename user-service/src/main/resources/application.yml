@@ -9,6 +9,15 @@ spring:
     active: development
 server:
   port: ${PORT:${SERVER_PORT:8120}}
+logging:
+  level:
+    root: INFO
+    kafka.*: WARN
+    org.springframework.*: INFO
+    org.neo4j.*: INFO
+    com.memorynotfound: DEBUG
+    org.apache.kafka.*: WARN
+    liquibase.integration.spring.SpringLiquibase: ERROR
 ---
 postgres.port: 5432
 postgres.host: localhost
@@ -25,6 +34,10 @@ spring:
     url: ${postgres.url}
     user: postgres
     password: example
+  cloud:
+    kubernetes.discovery.enabled: false
+    kubernetes.ribbon.enabled: false
+    kubernetes.enabled: false
 eureka:
   instance:
     prefer-ip-address: true
@@ -48,6 +61,9 @@ spring:
           defaultBrokerPort: 29092
           zkNodes: zookeeper
           defaultZkPort: 32181
+    kubernetes.discovery.enabled: false
+    kubernetes.ribbon.enabled: false
+    kubernetes.enabled: false
   datasource:
     url: ${postgres.url}
     data-username: postgres
@@ -68,25 +84,27 @@ eureka:
 ---
 postgres.port: 5432
 postgres.host: user-db
-postgres.url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}/
 postgres.database-name: postgres
-postgres.username: postgres
+postgres.url: jdbc:postgresql://${postgres.host:localhost}:${postgres.port}/${postgres.database-name}
 postgres.password: example
+postgres.username: postgres
 spring:
   profiles: kubernetes
   cloud:
+    kubernetes.discovery.enabled: true
+    kubernetes.ribbon.enabled: true
+    kubernetes.enabled: true
     stream:
       kafka:
         binder:
-          brokers: kafka
-          defaultBrokerPort: 29092
-          zkNodes: zookeeper
-          defaultZkPort: 32181
+          brokers: "PLAINTEXT://social-network-kafka:9092"
   datasource:
     url: ${postgres.url}
     data-username: ${postgres.username}
     data-password: ${postgres.password}
     driver-class-name: org.postgresql.Driver
+    xa:
+      data-source-class-name: org.postgresql.xa.PGXADataSource
   liquibase:
     url: ${postgres.url}
     user: ${postgres.username}
@@ -96,6 +114,12 @@ eureka.client.enabled: false
 ---
 spring:
   profiles: test
-eureka:
-  client:
-    enabled: false
+  cloud:
+    kubernetes.discovery.enabled: false
+    kubernetes.ribbon.enabled: false
+    kubernetes.enabled: false
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: false

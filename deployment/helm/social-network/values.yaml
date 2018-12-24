@@ -1,0 +1,24 @@
+kafka:
+  enabled: true
+  nameOverride: kafka
+  fullnameOverride: kafka
+
+friend-service:
+  fullnameOverride: friend-service
+
+recommendation-service:
+  fullnameOverride: recommendation-service
+
+user-service:
+  fullnameOverride: user-service
+
+edge-service:
+  fullnameOverride: edge-service
+
+prometheus:
+  enabled: true
+  fullnameOverride: prometheus
+  nameOverride: prometheus
+  server:
+    persistentVolume:
+      enabled: false

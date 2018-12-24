@@ -27,7 +27,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableR2dbcRepositories
-@Profile({"development", "docker", "kubernetes"})
+@Profile({"kubernetes", "docker", "development"})
 public class DataSourceConfiguration extends AbstractR2dbcConfiguration {
 
     @Value("${postgres.host}")

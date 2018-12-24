@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class FriendServiceApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(FriendServiceApplication.class).web(WebApplicationType.SERVLET).run(args);
+        new SpringApplicationBuilder(FriendServiceApplication.class).web(WebApplicationType.REACTIVE).run(args);
     }
 
     /**
